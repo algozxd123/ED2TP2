@@ -36,40 +36,39 @@ int ibqs(int quantidade, char* filename, int* n_leituras, int* n_escrita, int* n
 
         //ordenando bloco com quicksort na memoria principal
         quickSortInterno(bloco, 0, NBLOCOS-1);
+        fita_index %= F;
 
         //escrevendo bloco em uma das fitas
-        for(int j=0;j<NBLOCOS;j++){
-            fprintf(fitas[fita_index], "%08ld %06.2f %s %s %s ", bloco[j].inscricao,bloco[j].nota,bloco[j].estado,bloco[j].cidade,bloco[j].curso);
-        }
+        fwrite(&bloco, sizeof(Aluno), 20, fitas[fita_index]);
 
         //controlando qual ficha vai receber o bloco
-        if(fita_index<F) fita_index++;
-        else fita_index = 0;
+        fita_index++;
     }
 
     //Pegando o ultimo bloco caso ele esteja incompleto
     int resto = quantidade%NBLOCOS;
     if(resto != 0){
-
-        for(int j=0;j<resto;j++){
-            fscanf(arq, "%ld %f %s", &bloco[j].inscricao,&bloco[j].nota,bloco[j].estado);
-            fread(aux, 1, 1, arq);
-            fread(bloco[j].cidade, 50, 1, arq);
-            bloco[j].cidade[50] = '\0';
-            fread(aux, 1, 1, arq);
-            fread(bloco[j].curso, 30, 1, arq);
-            bloco[j].curso[30] = '\0';
-            bloco[j].flag = 0;
+        Aluno *memory = NULL;
+        memory = (Aluno*) malloc(resto * sizeof(Aluno));
+        if(memory == NULL){
+            exit(EXIT_FAILURE);
         }
-
-        quickSortInterno(bloco, 0, resto-1);
-
         for(int j=0;j<resto;j++){
-            fprintf(fitas[fita_index], "%08ld %06.2f %s %s %s ", bloco[j].inscricao,bloco[j].nota,bloco[j].estado,bloco[j].cidade,bloco[j].curso);
+            fscanf(arq, "%ld %f %s", &memory[j].inscricao,&memory[j].nota, memory[j].estado);
+            fread(aux, 1, 1, arq);
+            fread(memory[j].cidade, 50, 1, arq);
+            memory[j].cidade[50] = '\0';
+            fread(aux, 1, 1, arq);
+            fread(memory[j].curso, 30, 1, arq);
+            memory[j].curso[30] = '\0';
+            memory[j].flag = 0;
         }
+        quickSortInterno(memory, 0, resto-1);
+        fwrite(memory, resto * sizeof(Aluno), 1, fitas[fita_index]);
+        free(memory);
     }
 
     //intercalacao
-    
+    intercalacao(quantidade, fitas, bloco);
     return 0;
 }
