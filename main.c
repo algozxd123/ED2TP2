@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <string.h>
+#include <time.h>
 #include "ibqs.h"
 
 int main(int argc, char** argv){
@@ -49,18 +50,22 @@ int main(int argc, char** argv){
 
     int resultado_flag = 0;
     
+    start = clock();
     if(metodo == 1){
-        ibqs(n_itens, filename, &n_leituras, &n_escritas, &n_comparacoes);
+        resultado_flag = ibqs(n_itens, filename, &n_leituras, &n_escritas, &n_comparacoes);
     }else if(metodo == 2){
         //
     }else if(metodo == 3){
         //
     }
 
+    end = clock();
+    tempo_execucao = ((double) (end - start)) / CLOCKS_PER_SEC;
+
     if(resultado_flag){
-        printf("Numero de leituras: %d",n_leituras);
-        printf("Numero de leituras: %d",n_escritas);
-        printf("Numero de leituras: %d",n_comparacoes);
+        printf("Numero de leituras: %d\n",n_leituras);
+        printf("Numero de escritas: %d\n",n_escritas);
+        printf("Numero de comparacoes: %d\n",n_comparacoes);
         printf("Tempo de execucao: %lf s\n",tempo_execucao);
     }
     

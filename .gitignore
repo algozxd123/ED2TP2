@@ -2,3 +2,8 @@
 .vscode/settings.json
 main
 test.txt
+saida.txt
+fitas/*.bin
+runtests.py
+.csv
+data.csv

@@ -12,7 +12,7 @@ typedef struct {
 }Memoria;
 
 
-void intercalacao(int qte, FILE **fitas, Aluno *mem);
+void intercalacao(int qte, FILE **fitas, Aluno *mem, int* n_leituras, int* n_escrita, int* n_comparacoes);
 int fitaIndisponivel(FILE *fita);
 void colocarnaFita(Aluno x, FILE *fita);
 Memoria shellsort(Memoria v, int n);

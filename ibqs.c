@@ -21,8 +21,10 @@ int ibqs(int quantidade, char* filename, int* n_leituras, int* n_escrita, int* n
     int fita_index = 0;
 
     for(int i=0;i<quantidade/NBLOCOS;i++){
+        n_comparacoes_ibqs++;
         //lendo um bloco completo
         for(int j=0;j<NBLOCOS;j++){
+            n_comparacoes_ibqs++;
             fscanf(arq, "%ld %f %s", &bloco[j].inscricao,&bloco[j].nota,bloco[j].estado);
             //ignorando o proximo espaco
             fread(aux, 1, 1, arq);
@@ -32,6 +34,7 @@ int ibqs(int quantidade, char* filename, int* n_leituras, int* n_escrita, int* n
             fread(aux, 1, 1, arq);
             fread(bloco[j].curso, 30, 1, arq);
             bloco[j].curso[30] = '\0';
+            n_leituras_ibqs+=5;
         }
 
         //ordenando bloco com quicksort na memoria principal
@@ -47,13 +50,16 @@ int ibqs(int quantidade, char* filename, int* n_leituras, int* n_escrita, int* n
 
     //Pegando o ultimo bloco caso ele esteja incompleto
     int resto = quantidade%NBLOCOS;
+    n_comparacoes_ibqs++;
     if(resto != 0){
         Aluno *memory = NULL;
         memory = (Aluno*) malloc(resto * sizeof(Aluno));
+        n_comparacoes_ibqs++;
         if(memory == NULL){
             exit(EXIT_FAILURE);
         }
         for(int j=0;j<resto;j++){
+            n_comparacoes_ibqs++;
             fscanf(arq, "%ld %f %s", &memory[j].inscricao,&memory[j].nota, memory[j].estado);
             fread(aux, 1, 1, arq);
             fread(memory[j].cidade, 50, 1, arq);
@@ -62,6 +68,7 @@ int ibqs(int quantidade, char* filename, int* n_leituras, int* n_escrita, int* n
             fread(memory[j].curso, 30, 1, arq);
             memory[j].curso[30] = '\0';
             memory[j].flag = 0;
+            n_leituras_ibqs+=5;
         }
         quickSortInterno(memory, 0, resto-1);
         fwrite(memory, resto * sizeof(Aluno), 1, fitas[fita_index]);
@@ -69,6 +76,10 @@ int ibqs(int quantidade, char* filename, int* n_leituras, int* n_escrita, int* n
     }
 
     //intercalacao
-    intercalacao(quantidade, fitas, bloco);
-    return 0;
+    intercalacao(quantidade, fitas, bloco, n_leituras, n_escrita, n_comparacoes);
+
+    *n_escrita += n_escritas_ibqs;
+    *n_leituras += n_leituras_ibqs;
+    *n_comparacoes += n_comparacoes_ibqs;
+    return 1;
 }
