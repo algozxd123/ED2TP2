@@ -7,3 +7,5 @@ fitas/*.bin
 runtests.py
 .csv
 data.csv
+convBin.dat
+ArquivoOrdenado.txt
