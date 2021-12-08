@@ -5,6 +5,7 @@
 #include <time.h>
 #include "ibqs.h"
 #include "qSortExt.h"
+#include "intercalaSub.h"
 
 int main(int argc, char** argv){
 
@@ -55,9 +56,9 @@ int main(int argc, char** argv){
     if(metodo == 1){
         resultado_flag = ibqs(n_itens, filename, &n_leituras, &n_escritas, &n_comparacoes);
     }else if(metodo == 2){
-        resultado_flag = QuickSortExternoPrograma(n_itens, filename, &n_leituras, &n_escritas, &n_comparacoes);
+        resultado_flag = intercalaSub(n_itens, filename, &n_leituras, &n_escritas, &n_comparacoes);
     }else if(metodo == 3){
-        //
+        resultado_flag = QuickSortExternoPrograma(n_itens, filename, &n_leituras, &n_escritas, &n_comparacoes);
     }
 
     end = clock();
