@@ -12,11 +12,11 @@ typedef struct {
 }Memoria;
 
 
-void intercalacao(int qte, FILE **fitas, Aluno *mem, int* n_leituras, int* n_escrita, int* n_comparacoes);
+void intercalacao(int qte, FILE **fitas, Aluno *mem, int* n_leituras, int* n_escrita, int* n_comparacoes, int p_flag);
 int fitaIndisponivel(FILE *fita);
 void colocarnaFita(Aluno x, FILE *fita);
 Memoria shellsort(Memoria v, int n);
-void bintoTxt(int qte, FILE *fita, char *nome);
+void bintoTxt(int qte, FILE *fita, char *nome, int p_flag);
 int int_pow(int base, int exp);
 int pegaMenorFita(FILE **fitas, int QteFitas, int u);
 

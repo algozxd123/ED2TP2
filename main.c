@@ -54,7 +54,7 @@ int main(int argc, char** argv){
     
     start = clock();
     if(metodo == 1){
-        resultado_flag = ibqs(n_itens, filename, &n_leituras, &n_escritas, &n_comparacoes);
+        resultado_flag = ibqs(n_itens, filename, &n_leituras, &n_escritas, &n_comparacoes, p_flag);
     }else if(metodo == 2){
         resultado_flag = intercalaSub(n_itens, filename, &n_leituras, &n_escritas, &n_comparacoes);
     }else if(metodo == 3){

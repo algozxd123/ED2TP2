@@ -4,7 +4,7 @@ int n_leituras_intercalacao = 0;
 int n_escritas_intercalacao = 0;
 int n_comparacoes_intercalacao = 0;
 
-void intercalacao(int qte, FILE **fitas, Aluno *mem, int* n_leituras, int* n_escrita, int* n_comparacoes){
+void intercalacao(int qte, FILE **fitas, Aluno *mem, int* n_leituras, int* n_escrita, int* n_comparacoes, int p_flag){
     Memoria memoria; //Memoria Interna da Maquina
     int vez = 1; //A "vez" da intercalacao. Inicializada com 1 pq eh a 1a intercalacao
     int FimExec = 0; //Bool que indica FimExecucao = falso
@@ -108,17 +108,20 @@ void intercalacao(int qte, FILE **fitas, Aluno *mem, int* n_leituras, int* n_esc
 
     //A INTERCALACAO ACABA AQUI, A FUNCAO ABAIXO NAO FAZ PARTE DA INTERCALACAO
 
-    bintoTxt(qte, fitas[F * (vez % 2)], "saida.txt"); //Transformar binario em texto
+    bintoTxt(qte, fitas[F * (vez % 2)], "saida.txt", p_flag); //Transformar binario em texto
     *n_escrita = n_escritas_intercalacao;
     *n_leituras = n_leituras_intercalacao;
     *n_comparacoes = n_comparacoes_intercalacao;
 }
 
-void bintoTxt(int qte, FILE *fita, char *nome){
+void bintoTxt(int qte, FILE *fita, char *nome, int p_flag){
     fseek(fita, 0, SEEK_SET);
     FILE *saida = fopen(nome, "w");
     Aluno aux;
     while(fread(&aux, sizeof(Aluno), 1, fita)){
+        if(p_flag)
+            if(p_flag)
+                printf("%08ld %05.1f %s %s %s\n", aux.inscricao, aux.nota, aux.estado, aux.cidade, aux.curso);
         fprintf(saida, "%08ld %05.1f %s %s %s\n", aux.inscricao, aux.nota, aux.estado, aux.cidade, aux.curso);
     }
     fclose(saida);

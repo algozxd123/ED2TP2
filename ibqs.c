@@ -4,7 +4,7 @@ int n_leituras_ibqs = 0;
 int n_escritas_ibqs = 0;
 int n_comparacoes_ibqs = 0;
 
-int ibqs(int quantidade, char* filename, int* n_leituras, int* n_escrita, int* n_comparacoes){
+int ibqs(int quantidade, char* filename, int* n_leituras, int* n_escrita, int* n_comparacoes, int p_flag){
 
     Aluno bloco[NBLOCOS];
     FILE* arq;
@@ -35,6 +35,8 @@ int ibqs(int quantidade, char* filename, int* n_leituras, int* n_escrita, int* n
             fread(bloco[j].curso, 30, 1, arq);
             bloco[j].curso[30] = '\0';
             n_leituras_ibqs+=5;
+            if(p_flag)
+                printf("%08ld %05.1f %s %s %s\n", bloco[j].inscricao, bloco[j].nota, bloco[j].estado, bloco[j].cidade, bloco[j].curso);
         }
 
         //ordenando bloco com quicksort na memoria principal
@@ -69,6 +71,8 @@ int ibqs(int quantidade, char* filename, int* n_leituras, int* n_escrita, int* n
             memory[j].curso[30] = '\0';
             memory[j].flag = 0;
             n_leituras_ibqs+=5;
+            if(p_flag)
+                printf("%08ld %05.1f %s %s %s\n", memory[j].inscricao, memory[j].nota, memory[j].estado, memory[j].cidade, memory[j].curso);
         }
         quickSortInterno(memory, 0, resto-1);
         fwrite(memory, resto * sizeof(Aluno), 1, fitas[fita_index]);
@@ -76,8 +80,13 @@ int ibqs(int quantidade, char* filename, int* n_leituras, int* n_escrita, int* n
     }
 
     //intercalacao
-    intercalacao(quantidade, fitas, bloco, n_leituras, n_escrita, n_comparacoes);
-
+    if(p_flag)
+        printf("\n\n");
+    intercalacao(quantidade, fitas, bloco, n_leituras, n_escrita, n_comparacoes, p_flag);
+    fclose(arq);
+    for(int i = 0; i < 2*F; i++){
+        fclose(fitas[i]);
+    }
     *n_escrita += n_escritas_ibqs;
     *n_leituras += n_leituras_ibqs;
     *n_comparacoes += n_comparacoes_ibqs;
