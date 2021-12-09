@@ -4,7 +4,7 @@
 #include "qSortExt.h"
 #include <stdlib.h>
 #include <string.h>
-#define TAMANHOAREA 10
+#define TAMANHOAREA 20 // Tamanho do pivô do quicksort
 
 int n_leituras_qsext = 0;
 int n_escritas_qsext = 0;
@@ -31,6 +31,7 @@ void QuicksortExterno(FILE **ArqLi, FILE **ArqEi, FILE **ArqLEs, int Esq, int Di
         QuicksortExterno(ArqLi, ArqEi, ArqLEs, j, Dir);
         QuicksortExterno(ArqLi, ArqEi, ArqLEs, Esq, i);
     }
+    free(area.Area);
 }
 
 void leSup(FILE **ArqLes, TipoDado *UltLido, int *Ls, short *OndeLer)
@@ -66,7 +67,7 @@ void insereItem(TipoDado valor, TipoArea *Area)
     {
         Area->Area[c + 1] = Area->Area[c];
     }
-    Area->Area[c + 1] = valor; // Coloca valor na posição livre que empurrou e atuliza tamanho
+    Area->Area[c + 1] = valor; // Coloca valor na posição livre que empurrou e atualiza tamanho
     Area->tam++;
 }
 
@@ -88,7 +89,7 @@ void EscreveMin(FILE **ArqEi, TipoDado R, int *Ei)
 
 void RetiraMax(TipoArea *area, TipoDado *R, int *NRArea)
 {
-    *R = area->Area[area->tam - 1];
+    *R = area->Area[area->tam - 1]; // Remove último elemento, colocando em *R, e então diminui quantos espaços da área estão ocupados
     area->tam--;
     *NRArea = area->tam;
 }
@@ -96,7 +97,7 @@ void RetiraMax(TipoArea *area, TipoDado *R, int *NRArea)
 void RetiraMin(TipoArea *area, TipoDado *R, int *NRArea)
 {
     int c;
-    *R = area->Area[0];
+    *R = area->Area[0]; // Retira primeiro elemento, puxando os subsequentes uma posição à frente
     area->tam--;
     for (c = 0; c < area->tam; c++)
     {
@@ -106,7 +107,7 @@ void RetiraMin(TipoArea *area, TipoDado *R, int *NRArea)
     *NRArea = area->tam;
 }
 
-void Particao(FILE **ArqLi, FILE **ArqEi, FILE **ArqLEs, TipoArea area, int esq, int dir, int *i, int *j)
+void Particao(FILE **ArqLi, FILE **ArqEi, FILE **ArqLEs, TipoArea area, int esq, int dir, int *i, int *j) // Processo de particionamento com pivô
 {
     int Ls = dir;
     int Es = dir;
@@ -127,7 +128,7 @@ void Particao(FILE **ArqLi, FILE **ArqEi, FILE **ArqLEs, TipoArea area, int esq,
 
     while (Ls >= Li)
     {
-        n_comparacoes_qsext+=2;
+        n_comparacoes_qsext++;
         if (NRArea < TAMANHOAREA - 1)
         {
             n_comparacoes_qsext++;
@@ -156,7 +157,7 @@ void Particao(FILE **ArqLi, FILE **ArqEi, FILE **ArqLEs, TipoArea area, int esq,
         }
 
         n_comparacoes_qsext++;
-        if (UltLido.nota > Lsup)
+        if (UltLido.nota > Lsup) // Comparações com limites
         {
             *j = Es;
             EscreveMax(ArqLEs, UltLido, &Es);
@@ -195,17 +196,16 @@ void Particao(FILE **ArqLi, FILE **ArqEi, FILE **ArqLEs, TipoArea area, int esq,
     }
 }
 
-void learq(char *qualArquivo, int N_elementos)
+void learq(char *qualArquivo, int N_elementos) // Faz a leitura do arquivo .txt original e transforma em um arquivo binário que será usado no quicksort
 {
     TipoDado aux;
-    char lixo[1];
+    char lixo[1]; //Variável para tomar conta de espaços em branco
     FILE *arquivoTexto;
     FILE *arquivoBin;
     arquivoTexto = fopen(qualArquivo, "r");
     arquivoBin = fopen("convBin.dat", "w+b");
     for (int c = 0; c < N_elementos; c++)
     {
-        n_comparacoes_qsext++;
         fscanf(arquivoTexto, "%ld %lf %s", &aux.numInsc, &aux.nota, aux.estado);
         
         fread(lixo, 1, 1, arquivoTexto);
@@ -215,20 +215,18 @@ void learq(char *qualArquivo, int N_elementos)
         fread(lixo, 1, 1, arquivoTexto);
         fread(aux.curso, 30, 1, arquivoTexto);
         aux.curso[30] = '\0';
-        n_leituras_qsext+=5;
-        n_escritas_qsext++;
         fwrite(&aux, sizeof(TipoDado), 1, arquivoBin);
     }
     fclose(arquivoTexto);
     fclose(arquivoBin);
 }
 
-int QuickSortExternoPrograma(int N_elementos, char *qualArquivo, int *numLeituras, int *numEscritas, int *numComparacoes)
+int QuickSortExternoPrograma(int N_elementos, char *qualArquivo, int *numLeituras, int *numEscritas, int *numComparacoes) // Programa principal
 {
     learq(qualArquivo, N_elementos);
 
     FILE *ArqLi, *ArqEi, *ArqLES;
-    if ((ArqLi = fopen("convBin.dat", "r+b")) == NULL)
+    if ((ArqLi = fopen("convBin.dat", "r+b")) == NULL) //Inicialização dos arquivos e passagem de seus ponteiros para o algoritmo
     {
         printf("Erro na abertura do arquivo\n");
         return 0;
@@ -260,7 +258,7 @@ int QuickSortExternoPrograma(int N_elementos, char *qualArquivo, int *numLeitura
     return 1;
 }
 
-void escrevearq(char *qualArquivo, int N_elementos)
+void escrevearq(char *qualArquivo, int N_elementos) // Função que transforma o arquivo binário já ordenado de volta em um txt para saída
 {
     TipoDado aux;
     FILE *arquivoTexto;
@@ -269,11 +267,9 @@ void escrevearq(char *qualArquivo, int N_elementos)
     arquivoTexto = fopen("saida.txt", "w+");
     for (int c = 0; c < N_elementos; c++)
     {
-        n_comparacoes_qsext++;
         fread(&aux, sizeof(TipoDado), 1, arquivoBin);
-        n_leituras_qsext++;
         fprintf(arquivoTexto, "%ld %lf %s %s %s\n", aux.numInsc, aux.nota, aux.estado, aux.cidade, aux.curso);
-        n_escritas_qsext++;
+
     }
     fclose(arquivoTexto);
     fclose(arquivoBin);
