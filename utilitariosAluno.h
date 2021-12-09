@@ -25,9 +25,9 @@ struct alu
     char curso[31];
 };
 
-void learq1(char *qualArquivo, int N_elementos);
+void learq1(char *qualArquivo, int N_elementos, int p_flag);
 Analise *inicializaAnalise();
 void fitas2txt(int n);
-void toTxt(const char *arq);
+void toTxt(const char *arq, int p_flag);
 
 #endif 

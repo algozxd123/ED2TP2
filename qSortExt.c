@@ -196,7 +196,7 @@ void Particao(FILE **ArqLi, FILE **ArqEi, FILE **ArqLEs, TipoArea area, int esq,
     }
 }
 
-void learq(char *qualArquivo, int N_elementos) // Faz a leitura do arquivo .txt original e transforma em um arquivo binário que será usado no quicksort
+void learq(char *qualArquivo, int N_elementos, int p_flag) // Faz a leitura do arquivo .txt original e transforma em um arquivo binário que será usado no quicksort
 {
     TipoDado aux;
     char lixo[1]; //Variável para tomar conta de espaços em branco
@@ -215,15 +215,19 @@ void learq(char *qualArquivo, int N_elementos) // Faz a leitura do arquivo .txt 
         fread(lixo, 1, 1, arquivoTexto);
         fread(aux.curso, 30, 1, arquivoTexto);
         aux.curso[30] = '\0';
+
+        if(p_flag)
+            printf("%08ld %05.1f %s %s %s\n", aux.numInsc, aux.nota, aux.estado, aux.cidade, aux.curso);
         fwrite(&aux, sizeof(TipoDado), 1, arquivoBin);
     }
+    if(p_flag) printf("\n\n");
     fclose(arquivoTexto);
     fclose(arquivoBin);
 }
 
-int QuickSortExternoPrograma(int N_elementos, char *qualArquivo, int *numLeituras, int *numEscritas, int *numComparacoes) // Programa principal
+int QuickSortExternoPrograma(int N_elementos, char *qualArquivo, int *numLeituras, int *numEscritas, int *numComparacoes, int p_flag) // Programa principal
 {
-    learq(qualArquivo, N_elementos);
+    learq(qualArquivo, N_elementos, p_flag);
 
     FILE *ArqLi, *ArqEi, *ArqLES;
     if ((ArqLi = fopen("convBin.dat", "r+b")) == NULL) //Inicialização dos arquivos e passagem de seus ponteiros para o algoritmo
@@ -250,7 +254,7 @@ int QuickSortExternoPrograma(int N_elementos, char *qualArquivo, int *numLeitura
     fclose(ArqLES);
     fclose(ArqLi);
 
-    escrevearq("convBin.dat", N_elementos);
+    escrevearq("convBin.dat", N_elementos, p_flag);
 
     *numLeituras = n_leituras_qsext;
     *numEscritas = n_escritas_qsext;
@@ -258,7 +262,7 @@ int QuickSortExternoPrograma(int N_elementos, char *qualArquivo, int *numLeitura
     return 1;
 }
 
-void escrevearq(char *qualArquivo, int N_elementos) // Função que transforma o arquivo binário já ordenado de volta em um txt para saída
+void escrevearq(char *qualArquivo, int N_elementos, int p_flag) // Função que transforma o arquivo binário já ordenado de volta em um txt para saída
 {
     TipoDado aux;
     FILE *arquivoTexto;
@@ -269,7 +273,8 @@ void escrevearq(char *qualArquivo, int N_elementos) // Função que transforma o
     {
         fread(&aux, sizeof(TipoDado), 1, arquivoBin);
         fprintf(arquivoTexto, "%ld %lf %s %s %s\n", aux.numInsc, aux.nota, aux.estado, aux.cidade, aux.curso);
-
+        if(p_flag)
+            printf("%08ld %05.1f %s %s %s\n", aux.numInsc, aux.nota, aux.estado, aux.cidade, aux.curso);
     }
     fclose(arquivoTexto);
     fclose(arquivoBin);

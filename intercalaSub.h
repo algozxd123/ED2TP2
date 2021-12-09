@@ -14,6 +14,6 @@ void heapRefaz(doHeap *v, int esq, int dir, Analise *analise1);
 void heapConstroi(doHeap *v, int n, Analise *analise1);
 int estaoTodosMarcados(doHeap *vet, int n);
 void desmarca(doHeap *vet, int n);
-int intercalaSub(int TAMDADOS, char* filename, int* n_leituras, int* n_escrita, int* n_comparacoes);
+int intercalaSub(int TAMDADOS, char* filename, int* n_leituras, int* n_escrita, int* n_comparacoes, int p_flag);
 
 #endif //INTERCALASUB

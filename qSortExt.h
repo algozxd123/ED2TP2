@@ -21,8 +21,8 @@ typedef struct area
 
 void leSup(FILE **ArqLes, TipoDado *UltLido, int *Ls, short *OndeLer);
 void leInf(FILE **ArqLi, TipoDado *UltLido, int *Li, short *OndeLer);
-void learq(char *qualArquivo, int N_elementos);
-void escrevearq(char *qualArquivo, int N_elementos);
+void learq(char *qualArquivo, int N_elementos, int p_flag);
+void escrevearq(char *qualArquivo, int N_elementos, int p_flag);
 
 void InserirArea (TipoArea *Area, TipoDado *UltLido, int *NRArea);
 void insereItem(TipoDado valor, TipoArea *Area);
@@ -32,6 +32,6 @@ void EscreveMin(FILE **ArqEi, TipoDado R, int *Ei);
 
 void Particao( FILE **ArqLi, FILE **ArqEi, FILE **ArqLEs, TipoArea area, int esq, int dir, int *i, int *j);
 void QuicksortExterno(FILE **ArqLi, FILE **ArqEi, FILE **ArqLEs, int Esq, int Dir);
-int QuickSortExternoPrograma(int N_elementos, char *qualArquivo, int *numLeituras, int *numEscritas, int *numComparacoes);
+int QuickSortExternoPrograma(int N_elementos, char *qualArquivo, int *numLeituras, int *numEscritas, int *numComparacoes, int p_flag);
 
 #endif

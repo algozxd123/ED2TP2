@@ -57,7 +57,7 @@ void desmarca(doHeap *vet, int n)
     }
 }
 
-int intercalaSub(int TAMDADOS, char* filename, int* n_leituras, int* n_escrita, int* n_comparacoes)
+int intercalaSub(int TAMDADOS, char* filename, int* n_leituras, int* n_escrita, int* n_comparacoes, int p_flag)
 {
     Analise *analise1 = inicializaAnalise();
     double final;
@@ -83,7 +83,7 @@ int intercalaSub(int TAMDADOS, char* filename, int* n_leituras, int* n_escrita, 
     fimDoBloco.estado[0] = '\0';
     fimDoBloco.curso[0] = '\0';
     // Abre o arquivo com os registros
-    learq1(filename, TAMDADOS);
+    learq1(filename, TAMDADOS, p_flag);
     if ((dados = fopen("convBin.bin", "rb")) == NULL)
     {
         printf("Erro ao abrir arquivo.\n");
@@ -279,7 +279,7 @@ int intercalaSub(int TAMDADOS, char* filename, int* n_leituras, int* n_escrita, 
     //itoa(fEntrada + 1, aux, 10);
     strcat(nome, aux);
     strcat(nome, ".bin");
-    toTxt(nome);
+    toTxt(nome, p_flag);
     //printf("\n\tUltima fita: %d\n", fEntrada + 1);
 
     *n_comparacoes = analise1->comparacao;
